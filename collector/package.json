@@ -4,6 +4,7 @@
   "description": "Collector",
   "keywords": ["github"],
   "scripts": {
+    "start": "node collector.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,4 +23,7 @@
   "engines": {
     "node": "~0.10.15"
   },
+  "dependencies": {
+    "dotenv": "~0.2.7"
+  }
 }
