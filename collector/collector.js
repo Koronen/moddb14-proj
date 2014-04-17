@@ -47,18 +47,29 @@ MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
     throw err;
   }
 
-  var processResponse = function(err, headers, body) {
-    if(err) {
-      throw err;
-    }
-
-    var events = JSON.parse(body);
-    db.collection('collector').insert(events, function(err, records) {
-      if (err) {
+  db.ensureIndex(
+    'collector',
+    { id: 1 },
+    { unique: true, background: true, dropDups: true },
+    function(err, indexName) {
+      if(err) {
         throw err;
       }
-    });
-  };
 
-  sendRequest(processResponse);
+      var processResponse = function(err, headers, body) {
+        if(err) {
+          throw err;
+        }
+
+        var events = JSON.parse(body);
+        db.collection('collector').insert(events, function(err, records) {
+          if (err) {
+            throw err;
+          }
+        });
+      };
+
+      sendRequest(processResponse);
+    }
+  );
 });
