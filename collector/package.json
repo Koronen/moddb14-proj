@@ -4,7 +4,7 @@
   "description": "Collector",
   "keywords": ["github"],
   "scripts": {
-    "start": "node collector.js",
+    "start": "node node_modules/coffee-script/bin/coffee collector.coffee",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +24,7 @@
     "node": "~0.10.15"
   },
   "dependencies": {
+    "coffee-script": "~1.7.1",
     "dotenv": "~0.2.7",
     "amqp": "~0.2.0"
   }
