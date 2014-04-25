@@ -2,11 +2,11 @@
 
 var dotenv = require('dotenv');
 var https = require('https');
-var MongoClient = require('mongodb').MongoClient;
+var amqp = require('amqp');
 
 dotenv.load();
-if(!process.env.MONGODB_URL || process.env.MONGODB_URL.length < 1) {
-  console.error("Missing required environment variable MONGODB_URL!");
+if(!process.env.AMQP_URL || process.env.AMQP_URL.length < 1) {
+  console.error("Missing required environment variable AMQP_URL!");
   process.exit(1);
 }
 if(!process.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN.length < 1) {
@@ -83,32 +83,14 @@ var processResponse = function(err, headers, body) {
 sendRequest(processResponse, extra_headers);
 
 var processEvents = function(events) {
-  MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
-    if (err) {
-      console.error(new Date() + ": " + err);
-      process.exit(1);
-    }
-
-    db.ensureIndex(
-      'collector',
-      { id: 1 },
-      { unique: true, background: true, dropDups: true },
-      function(err, indexName) {
-        if(err) {
-          console.error(new Date() + ": " + err);
-          process.exit(1);
-        }
-
-        db.collection('collector').insert(events, function(err, records) {
-          if (err) {
-            console.error(new Date() + ": " + err);
-            process.exit(1);
-          }
-          else {
-            console.log(new Date() + ": Inserted " + records.length + " events");
-          }
-        });
-      }
-    );
+  var connection = amqp.createConnection({ url: process.env.AMQP_URL });
+  connection.on('ready', function () {
+    for(var i in events) {
+      connection.publish('raw-events', events[i]);
+    };
+  });
+  connection.on('error', function(err) {
+    console.error(err);
+    process.exit(1);
   });
 };
