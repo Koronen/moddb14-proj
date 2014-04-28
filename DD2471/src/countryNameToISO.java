@@ -35,12 +35,11 @@ public class countryNameToISO {
     String address = "Saint John's";
     System.out.println("address: "+address);
     
-    //sök igenom cache här!
+   
     Boolean inMap = checkIfInMap(address);
    
+    //if the address was not in the hashmap, do the google search.
     if(inMap == false){
-    //kolla om ISO inte är ok, i så fall, gör resten.
-    
 
     // prepare a URL to the geocoder
     URL url = new URL(GEOCODER_REQUEST_PREFIX_FOR_XML + "?address=" + URLEncoder.encode(address, "UTF-8") + "&sensor=false");
@@ -88,6 +87,8 @@ public class countryNameToISO {
       
       addToMap(address, ISOcode);
     }
+    
+    //else, get the iso from the hashmap
     else{
     	ISOcode = getISOFromMap(address);
     	System.out.println("got iso from hashmap");
@@ -100,12 +101,11 @@ public class countryNameToISO {
 		
 		String key = checkAddress;
 		Integer value = mapAddressToISO.get(key);
-		//System.out.println("address: " + key +" iso: "+ value);
 		return value;
      
 	}
-	public void addToMap(String nyaddress, int nyISO){
-		mapAddressToISO.put(nyaddress, nyISO);
+	public void addToMap(String newaddress, int newISO){
+		mapAddressToISO.put(newaddress, newISO);
 	       
 	}
 	public Boolean checkIfInMap(String getAddress){
