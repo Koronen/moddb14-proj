@@ -74,17 +74,18 @@
 			.datum(graticule)
 			.attr("class", "graticule")
 			.attr("d", path);
-
+	
 	d3.json("world-50m.json", function(error, world) {
 		var countries = topojson.feature(world, world.objects.countries).features,
 				neighbors = topojson.neighbors(world.objects.countries.geometries);
-		
 		svg.selectAll(".country")
 				.data(countries)
 			.enter().insert("path", ".graticule")
 				.attr("class", "country")
 				.attr("d", path)
-				.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+				.style("fill", "#ff0000"); // Set color here
+				//.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+
 				// .style sets the color of the counties
 		
 		// White border around the counties
@@ -93,6 +94,11 @@
 				.attr("class", "boundary")
 				.attr("d", path);
 	});
+	
 	d3.select(self.frameElement).style("height", height + "px");
-
+	/*
+	setInterval(function(){
+		console.log("PING!");
+	}, 5000);
+	*/
 </script>
