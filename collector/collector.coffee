@@ -54,6 +54,18 @@ class GitHubClient
     body = response.body
     delay = 1000
 
+eventIsContribution = (event) ->
+  event.type in [
+    'CommitCommentEvent',
+    'GollumEvent',
+    'IssueCommentEvent',
+    'IssueEvent',
+    'PullRequestEvent',
+    'PullRequestReviewCommentEvent',
+    'PushEvent',
+    'ReleaseEvent'
+  ]
+
 connection = amqp.createConnection url: process.env.AMQP_URL
 connection.on 'ready', ->
   client = new GitHubClient process.env.GITHUB_TOKEN
@@ -67,8 +79,9 @@ connection.on 'ready', ->
 
         events = JSON.parse(body)
         for event in events
-          addLocation event, (eventWithLocation) ->
-            connection.publish('raw-events', eventWithLocation)
+          if eventIsContribution(event)
+            addLocation event, (eventWithLocation) ->
+              connection.publish('raw-events', eventWithLocation)
 
       else if headers['status'] is '403 Forbidden' and headers['x-ratelimit-remaining'] is '0'
         console.warn new Date() + ": Hit rate limit!"
