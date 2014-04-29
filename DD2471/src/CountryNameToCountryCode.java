@@ -261,7 +261,7 @@
      public String getCode(String country){
      String countryFound = map.get(country);
      if(countryFound==null){
-             countryFound="UK";
+             countryFound="";
      }
      return countryFound;
      }

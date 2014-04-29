@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
 public enum CountryCodeToISO
 {
     
-    AC("Ascension Island", "ASC", -1, Assignment.EXCEPTIONALLY_RESERVED),
-
     AD("Andorra", "AND", 20, Assignment.OFFICIALLY_ASSIGNED),
 
     AE("United Arab Emirates", "ARE", 784, Assignment.OFFICIALLY_ASSIGNED),
@@ -159,8 +157,6 @@ public enum CountryCodeToISO
    
     CO("Colombia", "COL", 170, Assignment.OFFICIALLY_ASSIGNED),
 
-    CP("Clipperton Island", "CPT", -1, Assignment.EXCEPTIONALLY_RESERVED),
-
     CR("Costa Rica", "CRI", 188, Assignment.OFFICIALLY_ASSIGNED),
 
     CS("Serbia and Montenegro", "CSXX", 891, Assignment.TRANSITIONALLY_RESERVED),
@@ -186,7 +182,6 @@ public enum CountryCodeToISO
         }
     },
 
-    DG("Diego Garcia", "DGA", -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     DJ("Djibouti", "DJI", 262, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -197,8 +192,6 @@ public enum CountryCodeToISO
     DO("Dominican Republic", "DOM", 214, Assignment.OFFICIALLY_ASSIGNED),
 
     DZ("Algeria", "DZA", 12, Assignment.OFFICIALLY_ASSIGNED),
-
-    EA("Ceuta, Melilla", null, -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     EC("Ecuador", "ECU", 218, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -213,8 +206,6 @@ public enum CountryCodeToISO
     ES("Spain", "ESP", 724, Assignment.OFFICIALLY_ASSIGNED),
 
     ET("Ethiopia", "ETH", 231, Assignment.OFFICIALLY_ASSIGNED),
-
-    EU("European Union", null, -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     FI("Finland", "FIN", 246, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -235,7 +226,6 @@ public enum CountryCodeToISO
         }
     },
 
-    FX("France, Metropolitan", "FXX", -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     GA("Gabon", "GAB", 266, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -293,8 +283,6 @@ public enum CountryCodeToISO
     HT("Haiti", "HTI", 332, Assignment.OFFICIALLY_ASSIGNED),
 
     HU("Hungary", "HUN", 348, Assignment.OFFICIALLY_ASSIGNED),
-
-    IC("Canary Islands", null, -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     ID("Indonesia", "IDN", 360, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -540,8 +528,6 @@ public enum CountryCodeToISO
 
     ST("Sao Tome and Principe", "STP", 678, Assignment.OFFICIALLY_ASSIGNED),
 
-    SU("USSR", "SUN", -1, Assignment.EXCEPTIONALLY_RESERVED),
-
     SV("El Salvador", "SLV", 222, Assignment.OFFICIALLY_ASSIGNED),
 
     SX("Sint Maarten (Dutch part)", "SXM", 534, Assignment.OFFICIALLY_ASSIGNED),
@@ -549,8 +535,6 @@ public enum CountryCodeToISO
     SY("Syrian Arab Republic", "SYR", 760, Assignment.OFFICIALLY_ASSIGNED),
 
     SZ("Swaziland", "SWZ", 748, Assignment.OFFICIALLY_ASSIGNED),
-
-    TA("Tristan da Cunha", "TAA", -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     TC("Turks and Caicos Islands", "TCA", 796, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -596,15 +580,6 @@ public enum CountryCodeToISO
     UA("Ukraine", "UKR", 804, Assignment.OFFICIALLY_ASSIGNED),
 
     UG("Uganda", "UGA", 800, Assignment.OFFICIALLY_ASSIGNED),
-
-    UK("United Kingdom", null, -1, Assignment.EXCEPTIONALLY_RESERVED)
-    {
-        @Override
-        public Locale toLocale()
-        {
-            return Locale.UK;
-        }
-    },
 
     UM("United States Minor Outlying Islands", "UMI", 581, Assignment.OFFICIALLY_ASSIGNED),
 
