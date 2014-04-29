@@ -39,7 +39,7 @@ public class Worker {
       QueueingConsumer.Delivery delivery = consumer.nextDelivery();
      
       String message = new String(delivery.getBody()); 
-      message= "{\"actor\" : {\"id\" : 6863681, \"login\" : \"sdwalsh\", \"gravatar_id\" : \"e2256e5595d65aba76579e24c1977905\", \"url\" : \"https://api.github.com/users/sdwalsh\",\"avatar_url\" : \"https://avatars.githubusercontent.com/u/6863681?\",  \"location\": \"Stockholm, Sweden\"}}";
+      //message= "{\"actor\" : {\"id\" : 6863681, \"login\" : \"sdwalsh\", \"gravatar_id\" : \"e2256e5595d65aba76579e24c1977905\", \"url\" : \"https://api.github.com/users/sdwalsh\",\"avatar_url\" : \"https://avatars.githubusercontent.com/u/6863681?\",  \"location\": \"Stockholm, Sweden\"}}";
       JSONObject jsonObject = new JSONObject(message);
       System.out.println(message);
       
