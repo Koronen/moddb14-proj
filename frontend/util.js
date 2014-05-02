@@ -39,9 +39,15 @@ function printColor(color, per){
 	console.log(color + "\t" + array + "  \t" + RGB2Str(array));
 }
 
-printColor("blue", 0.0);
+/*printColor("blue", 0.0);
 printColor("teal", 0.2);
 printColor("green", 0.4);
 printColor("yellow", 0.6);
 printColor("orange", 0.8);
 printColor("red", 1.0);
+*/
+
+module.exports = {
+	RGB2Str: RGB2Str,
+	per2RGBArray: per2RGBArray
+}
