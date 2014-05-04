@@ -76,14 +76,19 @@ io.sockets.on("connection", function(socket){
 	socket.on("fetch data", function(data){
 		var collection = db.get('ccoll');
     collection.find({},{},function(e,docs){
-				// TODO count max and percentage here
 			if(e){
 				console.log(e);
 			}
-			
-			datamap = {}
+			var maxvalue = 0;
+			//var sumvalue = 0;
 			docs.forEach(function(entry){
-				datamap[entry.cid] = entry.value;
+				//sumvalue += entry.value;
+				maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
+			});
+			
+			var datamap = {}
+			docs.forEach(function(entry){
+				datamap[entry.cid] = entry.value/maxvalue;
 			});
 			
 			socket.emit("db update", datamap)
