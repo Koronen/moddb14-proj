@@ -34,9 +34,12 @@ function RGB2Str(array){
 	return "#" + r + g + b;
 }
 
-var socket = io.connect('http://localhost:3001');
+//var socket = io.connect("http://localhost:3001");
+//var socket = io.connect("http://192.168.1.51:3001");
+//var serverip = "http://localhost:3001";
+var socket = io.connect();
 socket.on('news', function (data) {
-	console.log(data);
+	//console.log(data);
 });
 
 
@@ -46,15 +49,14 @@ setInterval(function(){
 
 
 socket.on("db update", function(data){
-			console.log(data);
+			//console.log(data);
 			updatemap(data);
 		});
 
 function updatemap(dbdata){
 	// Is suposed to fetch data from the database
 
-	console.log("Update svg now");
-	console.log(dbdata);
+	//console.log(dbdata);
 	//socket.emit("dump", dbdata);
 	
 	svg.selectAll(".country")
@@ -65,8 +67,8 @@ function updatemap(dbdata){
 			// i is index
 			// Can use d.id to identifiy contries
 			if(d.id in dbdata){
-				return RGB2Str(per2RGBArray(dbdata[d.id]));
-				//return RGB2Str(per2RGBArray(Math.random()));
+				//return RGB2Str(per2RGBArray(dbdata[d.id]));
+				return RGB2Str(per2RGBArray(Math.random()));
 
 			} else {
 				return "#000000";
@@ -113,7 +115,7 @@ svg.append("path")
 
 var countries;
 
-d3.json("http://localhost:3000/javascripts/world-50m.json", function(error, world) {
+d3.json("/javascripts/world-50m.json", function(error, world) {
 	countries = topojson.feature(world, world.objects.countries).features,
 			neighbors = topojson.neighbors(world.objects.countries.geometries);
 	
