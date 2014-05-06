@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,17 +15,6 @@ public class Worker implements Runnable {
 
     private static final String IN_QUEUE_NAME = "raw-events";
     private static final String OUT_QUEUE_NAME = "events-with-iso";
-
-    public static JSONObject addIsoToEvent(JSONObject event, int isoNumber) {
-        String isoNumberAsString = new Integer(isoNumber).toString();
-        try {
-            JSONObject actor = (JSONObject) event.get("actor");
-            actor.put("country_iso", isoNumberAsString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return event;
-    }
 
     public static String extractLocationFromEvent(JSONObject event) {
         try {
@@ -71,32 +59,37 @@ public class Worker implements Runnable {
         channelOut.queueDeclare(OUT_QUEUE_NAME, true, false, false, null);
     }
 
-    private void processEvent(JSONObject jsonObject) throws IOException {
-        String location = extractLocationFromEvent(jsonObject);
+    private void processEvent(JSONObject event) throws IOException {
+        String location = extractLocationFromEvent(event);
         if (location == null || location.equals("")) {
             return;
         }
 
-        String countryName = geocodingService.locationToCountryName(location);
-        if (countryName == GoogleGeocodingService.NO_COUNTRY) {
+        String countryAlpha2 = geocodingService
+                .locationToCountryAlpha2(location);
+        if (countryAlpha2 == GoogleGeocodingService.NO_COUNTRY) {
             return;
         }
 
-        List<CountryCodeToISO> countries = CountryCodeToISO
-                .findByName(countryName);
-        int isoCode = -1;
-        if (!countries.isEmpty()) {
-            isoCode = countries.get(0).getNumeric();
-        }
+        CountryCodeToISO country = CountryCodeToISO.getByCode(countryAlpha2);
+        if (country != null) {
+            try {
+                JSONObject actor = (JSONObject) event.get("actor");
+                actor.put("country_alpha2", countryAlpha2);
+                actor.put("country_name", country.getName());
+                actor.put("country_iso", country.getNumeric());
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            String messageOut = event.toString();
+            channelOut.basicPublish("", OUT_QUEUE_NAME,
+                    MessageProperties.PERSISTENT_TEXT_PLAIN,
+                    messageOut.getBytes());
 
-        JSONObject jsonObjectWithISO = addIsoToEvent(jsonObject, isoCode);
-        String messageOut = jsonObjectWithISO.toString();
-        channelOut.basicPublish("", OUT_QUEUE_NAME,
-                MessageProperties.PERSISTENT_TEXT_PLAIN, messageOut.getBytes());
-
-        try {
-            System.out.println("[*] Sent: actor=" + jsonObjectWithISO.get("actor"));
-        } catch (JSONException e) {
+            try {
+                System.out.println("[*] Sent: actor=" + event.get("actor"));
+            } catch (JSONException e) {
+            }
         }
     }
 
@@ -121,7 +114,8 @@ public class Worker implements Runnable {
                 String message = new String(delivery.getBody());
                 try {
                     JSONObject event = new JSONObject(message);
-                    System.out.println("[*] Received: actor=" + event.get("actor"));
+                    System.out.println("[*] Received: actor="
+                            + event.get("actor"));
                     processEvent(event);
                 } catch (JSONException e) {
                     System.err.println("Invalid event JSON!");

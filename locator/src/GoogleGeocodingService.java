@@ -27,7 +27,8 @@ public class GoogleGeocodingService {
 
     public static final void main(String[] argv) throws Exception {
         GoogleGeocodingService cnti = new GoogleGeocodingService();
-        System.out.println(cnti.locationToCountryName("Maluku"));
+        String countryCode = cnti.locationToCountryAlpha2("Maluku");
+        System.out.println(countryCode);
     }
 
     private DocumentBuilder documentBuilder;
@@ -43,34 +44,27 @@ public class GoogleGeocodingService {
         xpath = XPathFactory.newInstance().newXPath();
     }
 
-    private String extractCountryName(Document geocoderResultDocument) {
+    private String extractCountryCode(Document geocoderResultDocument) {
         try {
-            // obtain the formatted_address field for every result
-            NodeList resultNodeList = (NodeList) xpath.evaluate(
-                    "/GeocodeResponse/result/formatted_address",
-                    geocoderResultDocument, XPathConstants.NODESET);
+            NodeList resultNodeList = (NodeList) xpath
+                    .evaluate(
+                            "/GeocodeResponse/result/address_component/short_name[../type='country']",
+                            geocoderResultDocument, XPathConstants.NODESET);
 
-            // if google does not find any location
             if (resultNodeList.getLength() == 0) {
                 return NO_COUNTRY;
             }
 
-            String n = resultNodeList.item(0).getTextContent();
-            String[] array = n.split(",");
-
-            String countryPlusSpace = array[array.length - 1];
-            String country = countryPlusSpace.trim();
-
-            return country;
+            return resultNodeList.item(0).getTextContent().trim();
         } catch (XPathExpressionException e) {
             return NO_COUNTRY;
         }
     }
 
-    public String locationToCountryName(String location) throws IOException {
+    public String locationToCountryAlpha2(String location) throws IOException {
         Document geocoderResultDocument = sendApiRequest(location);
         if (geocoderResultDocument != null) {
-            return extractCountryName(geocoderResultDocument);
+            return extractCountryCode(geocoderResultDocument);
         } else {
             return NO_COUNTRY;
         }
