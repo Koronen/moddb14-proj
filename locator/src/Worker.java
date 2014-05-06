@@ -1,105 +1,136 @@
+import java.io.IOException;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.MessageProperties;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownSignalException;
 
-public class Worker {
+public class Worker implements Runnable {
 
-    private static final String TASK_QUEUE_NAME = "task_queue";
+    private static final String IN_QUEUE_NAME = "raw-events";
+    private static final String OUT_QUEUE_NAME = "events-with-iso";
 
-    public static void main(String[] argv) throws Exception {
-
-        countryNameToISO nameToIso = new countryNameToISO();
-
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-
-        Connection connectionIn = factory.newConnection();
-        Channel channelIn = connectionIn.createChannel();
-
-        channelIn.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
-        System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-
-        Connection connectionOut = factory.newConnection();
-        Channel channelOut = connectionOut.createChannel();
-
-        channelOut.queueDeclare("eventsWithISO", true, false, false, null);
-
-        channelIn.basicQos(1);
-
-        QueueingConsumer consumer = new QueueingConsumer(channelIn);
-        channelIn.basicConsume(TASK_QUEUE_NAME, false, consumer);
-
-        while (true) {
-            QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-
-            String message = new String(delivery.getBody());
-
-            JSONObject jsonObject = new JSONObject(message);
-            System.out.println(message);
-
-            String address = parseJson(jsonObject);
-
-            if (address == null || address.equals("")) {
-                channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(),
-                        false);
-                continue;
-            }
-
-            int isoCode = nameToIso.start(address);
-            // -1 is returned we should skip this message because a isonumber
-            // cannot be found.
-            if (isoCode == countryNameToISO.NO_COUNTRY_CODE) {
-                channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(),
-                        false);
-                continue;
-            }
-
-            // Sent Json object
-            JSONObject jsonObjectWithISO = addISOToJson(jsonObject, isoCode);
-            String messageOut = jsonObjectWithISO.toString();
-
-            channelOut.basicPublish("", "eventsWithISO",
-                    MessageProperties.PERSISTENT_TEXT_PLAIN,
-                    messageOut.getBytes());
-
-            System.out.println("[*] Sent '" + messageOut + "'");
-
-            channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+    public static JSONObject addIsoToEvent(JSONObject event, int isoNumber) {
+        String isoNumberAsString = new Integer(isoNumber).toString();
+        try {
+            JSONObject actor = (JSONObject) event.get("actor");
+            actor.put("country_iso", isoNumberAsString);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        return event;
     }
 
-    public static String parseJson(JSONObject JsonMessage) {
-        String location = "";
+    public static String extractLocationFromEvent(JSONObject event) {
         try {
-            if (JsonMessage.has("actor")) {
-                JSONObject actor = (JSONObject) JsonMessage.get("actor");
+            if (event.has("actor")) {
+                JSONObject actor = (JSONObject) event.get("actor");
                 if (actor.has("location")) {
                     Object locationObject = actor.get("location");
-                    if (locationObject != null) {
-                        location = (String) locationObject;
-                    }
+                    return JSONObject.valueToString(locationObject);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return location;
+        return "";
     }
 
-    public static JSONObject addISOToJson(JSONObject JsonMessage, int isoNumber) {
-        String isoNumberAsString = new Integer(isoNumber).toString();
-        try {
-            JSONObject actor = (JSONObject) JsonMessage.get("actor");
-            actor.put("country_iso", isoNumberAsString);
-        } catch (JSONException e) {
-            e.printStackTrace();
+    public static void main(String[] argv) throws Exception {
+        Worker worker = new Worker("localhost");
+        worker.connect();
+        worker.run();
+    }
+
+    private ConnectionFactory amqpConnectionFactory;
+    private Channel channelIn;
+    private Channel channelOut;
+    private GoogleGeocodingService geocodingService;
+
+    public Worker(String amqpHost) {
+        geocodingService = new GoogleGeocodingService();
+        amqpConnectionFactory = new ConnectionFactory();
+        amqpConnectionFactory.setHost(amqpHost);
+    }
+
+    public void connect() throws IOException {
+        Connection connectionIn = amqpConnectionFactory.newConnection();
+        channelIn = connectionIn.createChannel();
+        channelIn.queueDeclare(IN_QUEUE_NAME, true, false, false, null);
+        channelIn.basicQos(1);
+
+        Connection connectionOut = amqpConnectionFactory.newConnection();
+        channelOut = connectionOut.createChannel();
+        channelOut.queueDeclare(OUT_QUEUE_NAME, true, false, false, null);
+    }
+
+    private void processEvent(JSONObject jsonObject) throws IOException {
+        String location = extractLocationFromEvent(jsonObject);
+        if (location == null || location.equals("")) {
+            return;
         }
-        return JsonMessage;
+
+        String countryName = geocodingService.locationToCountryName(location);
+        if (countryName == GoogleGeocodingService.NO_COUNTRY) {
+            return;
+        }
+
+        List<CountryCodeToISO> countries = CountryCodeToISO
+                .findByName(countryName);
+        int isoCode = -1;
+        if (!countries.isEmpty()) {
+            isoCode = countries.get(0).getNumeric();
+        }
+
+        JSONObject jsonObjectWithISO = addIsoToEvent(jsonObject, isoCode);
+        String messageOut = jsonObjectWithISO.toString();
+        channelOut.basicPublish("", OUT_QUEUE_NAME,
+                MessageProperties.PERSISTENT_TEXT_PLAIN, messageOut.getBytes());
+
+        try {
+            System.out.println("[*] Sent: actor=" + jsonObjectWithISO.get("actor"));
+        } catch (JSONException e) {
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            QueueingConsumer consumer = new QueueingConsumer(channelIn);
+            channelIn.basicConsume(IN_QUEUE_NAME, false, consumer);
+
+            while (true) {
+                QueueingConsumer.Delivery delivery;
+                try {
+                    delivery = consumer.nextDelivery();
+                } catch (ShutdownSignalException | ConsumerCancelledException
+                        | InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
+                channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(),
+                        false);
+
+                String message = new String(delivery.getBody());
+                try {
+                    JSONObject event = new JSONObject(message);
+                    System.out.println("[*] Received: actor=" + event.get("actor"));
+                    processEvent(event);
+                } catch (JSONException e) {
+                    System.err.println("Invalid event JSON!");
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            System.exit(1);
+        }
     }
 }
