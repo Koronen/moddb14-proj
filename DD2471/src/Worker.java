@@ -47,12 +47,14 @@ public class Worker {
       String address = parseJson(jsonObject);
       
       if(address == null || address.equals("")){
+    	  channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
     	  continue;
       }
       int isoCode = nameToIso.start(address); 
       
       //-1 is returned we should skip this message because a isonumber cannot be found.
       if (isoCode == -1){
+    	  channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
     	  continue;
       }
       
