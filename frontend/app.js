@@ -10,21 +10,10 @@ var monk = require('monk');
 var db = monk('localhost:27017/moddb');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
-//var server = require("http").createServer(app);
-//var io = require('socket.io').listen(server);
-/*
-var app = express()
-  , http = require('http')
-  , server = http.createServer(app)
-  , io = require('socket.io').listen(server);
-
-server.listen(3000);
-*/
-var debug = require('debug')('my-application');
+var debug = require('debug')('moddb14-frontend');
 app.set('port', process.env.PORT || 3000);
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
@@ -43,13 +32,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Make our db accessible to our router
-app.use(function(req,res,next){
+app.use(function(req, res, next){
     req.db = db;
     next();
 });
-//app.use(express.static(process.cwd() + '/public'));
 app.use('/', routes);
-app.use('/users', users);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
@@ -82,31 +69,29 @@ app.use(function(err, req, res, next) {
     });
 });
 
-io.sockets.on("connection", function(socket){
-	socket.on("dump", function(data){
-		console.log(data);
-	});
-	socket.on("fetch data", function(data){
-		var collection = db.get('ccoll');
-    collection.find({},{},function(e,docs){
-			if(e){
-				console.log(e);
-			}
-			var maxvalue = 0;
-			//var sumvalue = 0;
-			docs.forEach(function(entry){
-				//sumvalue += entry.value;
-				maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
-			});
-			
-			var datamap = {}
-			docs.forEach(function(entry){
-				datamap[entry.cid] = entry.value/maxvalue;
-			});
-			
-			socket.emit("db update", datamap)
+io.sockets.on("connection", function(socket) {
+  socket.on("dump", function(data) {
+    console.log(data);
+  });
+  socket.on("fetch data", function(data) {
+    var collection = db.get('ccoll');
+    collection.find({}, {}, function(e, docs) {
+      if(e) {
+        console.log(e);
+      }
+      var maxvalue = 0;
+      docs.forEach(function(entry) {
+        maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
+      });
+
+      var datamap = {};
+      docs.forEach(function(entry) {
+        datamap[entry.cid] = entry.value/maxvalue;
+      });
+
+      socket.emit("db update", datamap)
     });
-	});
+  });
 });
 
 module.exports = app;
