@@ -1,12 +1,15 @@
 dotenv = require 'dotenv'
 https = require 'https'
 amqp = require 'amqp'
+redis = require 'redis-url'
 
 dotenv.load()
 if !process.env.AMQP_URL or process.env.AMQP_URL.length < 1
   console.error "Missing required environment variable AMQP_URL!"
   process.exit 1
-
+if !process.env.REDIS_URL or process.env.REDIS_URL.length < 1
+  console.error "Missing required environment variable REDIS_URL!"
+  process.exit 1
 if !process.env.GITHUB_TOKEN or process.env.GITHUB_TOKEN.length < 1
   console.warn "Missing recommended environment variable GITHUB_TOKEN!"
 
@@ -68,10 +71,11 @@ eventIsContribution = (event) ->
 
 connection = amqp.createConnection url: process.env.AMQP_URL
 connection.on 'ready', ->
-  client = new GitHubClient process.env.GITHUB_TOKEN
+  redisClient = redis.connect process.env.REDIS_URL
+  githubClient = new GitHubClient process.env.GITHUB_TOKEN
 
   pollEvents = ->
-    client.sendRequest '/events', (headers, body) ->
+    githubClient.sendRequest '/events', (headers, body) ->
       delay = 60000
 
       if headers['status'] is '200 OK'
@@ -92,19 +96,25 @@ connection.on 'ready', ->
       console.log new Date() + ": Sending next request in " + delay/1000 + "s"
       setTimeout pollEvents, delay
 
-  loginToLocation = {}
   addLocation = (event, callback) ->
     login = event.actor.login
-    if loginToLocation[login]
-      event.actor.location = loginToLocation[login]
-      callback event
-    else
-      client.sendRequest "/users/#{login}", (headers, body) ->
-        location = JSON.parse(body).location
-        event.actor.location = location
-        loginToLocation[login] = location
-        console.log new Date() + ": Set #{login} location to \"#{location}\""
+    key = "github:user:#{login}:location"
+
+    redisClient.get key, (err, reply) ->
+      if reply
+        console.log new Date() + ": Got \"#{login}\" location from Redis: \"#{reply}\""
+        event.actor.location = reply
         callback event
+      else
+        githubClient.sendRequest "/users/#{login}", (headers, body) ->
+          location = JSON.parse(body).location
+          event.actor.location = location
+          console.log new Date() + ": Got \"#{login}\" location from GitHub: \"#{location}\""
+          callback event
+
+          if location and location isnt "" # Don't cache empty locations
+            redisClient.set key, location, (err, reply) ->
+              redisClient.expire key, 86400
 
   pollEvents()
 
