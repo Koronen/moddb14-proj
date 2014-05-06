@@ -16,7 +16,7 @@ import org.json.JSONObject;
   
 public class Worker {
 
-  private static final String TASK_QUEUE_NAME = "task_queue";
+  private static final String TASK_QUEUE_NAME = "raw-events";
 
   public static void main(String[] argv) throws Exception {
 
