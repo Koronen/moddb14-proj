@@ -32,7 +32,7 @@ public class Worker implements Runnable {
         try {
             if (event.has("actor")) {
                 JSONObject actor = (JSONObject) event.get("actor");
-                if (actor.has("location")) {
+                if (actor.has("location") && !actor.isNull("location")) {
                     Object locationObject = actor.get("location");
                     return JSONObject.valueToString(locationObject);
                 }
