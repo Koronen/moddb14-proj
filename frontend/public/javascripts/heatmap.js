@@ -1,4 +1,4 @@
-function per2RGBArray(p){
+function calcRGB(p){
 	var r,g,b;
 	if(0 <= p && p < 0.4){
 		// Blue -> Teal -> Green
@@ -19,6 +19,24 @@ function per2RGBArray(p){
 	return [r,g,b];
 }
 
+function calcRGB2(p){
+	var r,g,b;
+	var br = 0.3; // Breaking point, lower value increases the red overall
+	if(p <= br){
+		// Green -> Yellow
+		r = Math.ceil(255*((p-0)/br));
+		g = 255.0;
+		b = 0;
+	}
+	else {
+		// Yellow -> Red
+		r = 255.0;
+		g = Math.ceil(255 - 255 * ((p-br)/(1-br)));
+		b = 0;
+	}
+	return [r,g,b];
+}
+
 function RGB2Str(array){
 	var r,g,b;
 	var correctHex = function(i){
@@ -34,9 +52,10 @@ function RGB2Str(array){
 	return "#" + r + g + b;
 }
 
-//var socket = io.connect("http://localhost:3001");
-//var socket = io.connect("http://192.168.1.51:3001");
-//var serverip = "http://localhost:3001";
+function RGB(p){
+	return RGB2Str(calcRGB2(p));
+}
+
 var socket = io.connect();
 socket.on('news', function (data) {
 	//console.log(data);
@@ -62,14 +81,12 @@ function updatemap(dbdata){
 	svg.selectAll(".country")
 		.data(countries)
 		.style("fill",function(d, i){
-
 			// d is data from data()
 			// i is index
 			// Can use d.id to identifiy contries
 			if(d.id in dbdata){
-				//return RGB2Str(per2RGBArray(dbdata[d.id]));
-				return RGB2Str(per2RGBArray(Math.random()));
-
+				//return RGB(dbdata[d.id]);
+				return RGB(Math.random());
 			} else {
 				return "#000000";
 			}

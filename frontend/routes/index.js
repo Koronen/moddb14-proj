@@ -3,27 +3,22 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-
-  res.render('index', { title: 'Express' });
+	res.redirect('/heatmap');
+	/*
+  res.render('index', { 
+		title: 'Visualizing Github public activity on a heat map',
+		subtitle: 'A project for the KTH course DD2471'
+	});
+	*/
 });
 
 /* GET Heatmap page */
 router.get('/heatmap', function(req, res) {
-	// FIXME Can't render directly
-	/*
-	var db = req.db;
-	var collection = db.get('ccoll');
-	collection.find({},{},function(e,docs){
-		if(e){
-			console.log(e);
-		}
-		console.log("Initial\n" + docs);
-		res.render('heatmap', {
-				"dbdata" : docs
-		});
+	res.render('heatmap',{ 
+		title: 'Visualizing Github public activity on a heat map',
+		subtitle: 'A project for the KTH course DD2471'
+		//authors: ["Simon", "Mitra", "Victor"]
 	});
-	*/
-	res.render('heatmap',{});
 });
 
 module.exports = router;
