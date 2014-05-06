@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
@@ -23,9 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public enum CountryCodeToISO
-{
-    
+public enum CountryCodeToISO {
+
     AD("Andorra", "AND", 20, Assignment.OFFICIALLY_ASSIGNED),
 
     AE("United Arab Emirates", "ARE", 784, Assignment.OFFICIALLY_ASSIGNED),
@@ -38,7 +36,6 @@ public enum CountryCodeToISO
 
     AL("Albania", "ALB", 8, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     AM("Armenia", "ARM", 51, Assignment.OFFICIALLY_ASSIGNED),
 
     AN("Netherlands Antilles", "ANHH", 530, Assignment.TRANSITIONALLY_RESERVED),
@@ -47,46 +44,34 @@ public enum CountryCodeToISO
 
     AQ("Antarctica", "ATA", 10, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     AR("Argentina", "ARG", 32, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     AS("American Samoa", "ASM", 16, Assignment.OFFICIALLY_ASSIGNED),
 
-   
     AT("Austria", "AUT", 40, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     AU("Australia", "AUS", 36, Assignment.OFFICIALLY_ASSIGNED),
 
     AW("Aruba", "ABW", 533, Assignment.OFFICIALLY_ASSIGNED),
 
-   
     AX("\u212Bland Islands", "ALA", 248, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     AZ("Azerbaijan", "AZE", 31, Assignment.OFFICIALLY_ASSIGNED),
 
     BA("Bosnia and Herzegovina", "BIH", 70, Assignment.OFFICIALLY_ASSIGNED),
 
     BB("Barbados", "BRB", 52, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     BD("Bangladesh", "BGD", 50, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     BE("Belgium", "BEL", 56, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     BF("Burkina Faso", "BFA", 854, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     BG("Bulgaria", "BGR", 100, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     BH("Bahrain", "BHR", 48, Assignment.OFFICIALLY_ASSIGNED),
 
-    
     BI("Burundi", "BDI", 108, Assignment.OFFICIALLY_ASSIGNED),
 
     BJ("Benin", "BEN", 204, Assignment.OFFICIALLY_ASSIGNED),
@@ -97,9 +82,11 @@ public enum CountryCodeToISO
 
     BN("Brunei Darussalam", "BRN", 96, Assignment.OFFICIALLY_ASSIGNED),
 
-    BO("Bolivia, Plurinational State of", "BOL", 68, Assignment.OFFICIALLY_ASSIGNED),
+    BO("Bolivia, Plurinational State of", "BOL", 68,
+            Assignment.OFFICIALLY_ASSIGNED),
 
-    BQ("Bonaire, Sint Eustatius and Saba", "BES", 535, Assignment.OFFICIALLY_ASSIGNED),
+    BQ("Bonaire, Sint Eustatius and Saba", "BES", 535,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     BR("Brazil", "BRA", 76, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -117,19 +104,17 @@ public enum CountryCodeToISO
 
     BZ("Belize", "BLZ", 84, Assignment.OFFICIALLY_ASSIGNED),
 
-    CA("Canada", "CAN", 124, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    CA("Canada", "CAN", 124, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.CANADA;
         }
     },
 
-   
     CC("Cocos (Keeling) Islands", "CCK", 166, Assignment.OFFICIALLY_ASSIGNED),
 
-    CD("Congo, the Democratic Republic of the", "COD", 180, Assignment.OFFICIALLY_ASSIGNED),
+    CD("Congo, the Democratic Republic of the", "COD", 180,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     CF("Central African Republic", "CAF", 140, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -145,16 +130,13 @@ public enum CountryCodeToISO
 
     CM("Cameroon", "CMR", 120, Assignment.OFFICIALLY_ASSIGNED),
 
-    CN("China", "CHN", 156, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    CN("China", "CHN", 156, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.CHINA;
         }
     },
 
-   
     CO("Colombia", "COL", 170, Assignment.OFFICIALLY_ASSIGNED),
 
     CR("Costa Rica", "CRI", 188, Assignment.OFFICIALLY_ASSIGNED),
@@ -173,15 +155,12 @@ public enum CountryCodeToISO
 
     CZ("Czech Republic", "CZE", 203, Assignment.OFFICIALLY_ASSIGNED),
 
-    DE("Germany", "DEU", 276, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    DE("Germany", "DEU", 276, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.GERMANY;
         }
     },
-
 
     DJ("Djibouti", "DJI", 262, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -211,29 +190,26 @@ public enum CountryCodeToISO
 
     FJ("Fiji", "FJI", 242, Assignment.OFFICIALLY_ASSIGNED),
 
-    FK("Falkland Islands (Malvinas)", "FLK", 238, Assignment.OFFICIALLY_ASSIGNED),
+    FK("Falkland Islands (Malvinas)", "FLK", 238,
+            Assignment.OFFICIALLY_ASSIGNED),
 
-    FM("Micronesia, Federated States of", "FSM", 583, Assignment.OFFICIALLY_ASSIGNED),
+    FM("Micronesia, Federated States of", "FSM", 583,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     FO("Faroe Islands", "FRO", 234, Assignment.OFFICIALLY_ASSIGNED),
 
-    FR("France", "FRA", 250, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    FR("France", "FRA", 250, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.FRANCE;
         }
     },
 
-
     GA("Gabon", "GAB", 266, Assignment.OFFICIALLY_ASSIGNED),
 
-    GB("United Kingdom", "GBR", 826, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    GB("United Kingdom", "GBR", 826, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.UK;
         }
     },
@@ -262,7 +238,8 @@ public enum CountryCodeToISO
 
     GR("Greece", "GRC", 300, Assignment.OFFICIALLY_ASSIGNED),
 
-    GS("South Georgia and the South Sandwich Islands", "SGS", 239, Assignment.OFFICIALLY_ASSIGNED),
+    GS("South Georgia and the South Sandwich Islands", "SGS", 239,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     GT("Guatemala", "GTM", 320, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -274,7 +251,8 @@ public enum CountryCodeToISO
 
     HK("Hong Kong", "HKG", 344, Assignment.OFFICIALLY_ASSIGNED),
 
-    HM("Heard Island and McDonald Islands", "HMD", 334, Assignment.OFFICIALLY_ASSIGNED),
+    HM("Heard Island and McDonald Islands", "HMD", 334,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     HN("Honduras", "HND", 340, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -294,7 +272,8 @@ public enum CountryCodeToISO
 
     IN("India", "IND", 356, Assignment.OFFICIALLY_ASSIGNED),
 
-    IO("British Indian Ocean Territory", "IOT", 86, Assignment.OFFICIALLY_ASSIGNED),
+    IO("British Indian Ocean Territory", "IOT", 86,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     IQ("Iraq", "IRQ", 368, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -302,11 +281,9 @@ public enum CountryCodeToISO
 
     IS("Iceland", "ISL", 352, Assignment.OFFICIALLY_ASSIGNED),
 
-    IT("Italy", "ITA", 380, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    IT("Italy", "ITA", 380, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.ITALY;
         }
     },
@@ -317,16 +294,13 @@ public enum CountryCodeToISO
 
     JO("Jordan", "JOR", 400, Assignment.OFFICIALLY_ASSIGNED),
 
-    JP("Japan", "JPN", 392, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    JP("Japan", "JPN", 392, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.JAPAN;
         }
     },
 
- 
     KE("Kenya", "KEN", 404, Assignment.OFFICIALLY_ASSIGNED),
 
     KG("Kyrgyzstan", "KGZ", 417, Assignment.OFFICIALLY_ASSIGNED),
@@ -339,13 +313,12 @@ public enum CountryCodeToISO
 
     KN("Saint Kitts and Nevis", "KNA", 659, Assignment.OFFICIALLY_ASSIGNED),
 
-    KP("Korea, Democratic People's Republic of", "PRK", 408, Assignment.OFFICIALLY_ASSIGNED),
+    KP("Korea, Democratic People's Republic of", "PRK", 408,
+            Assignment.OFFICIALLY_ASSIGNED),
 
-    KR("Korea, Republic of", "KOR", 410, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    KR("Korea, Republic of", "KOR", 410, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.KOREA;
         }
     },
@@ -356,7 +329,8 @@ public enum CountryCodeToISO
 
     KZ("Kazakhstan", "KAZ", 398, Assignment.OFFICIALLY_ASSIGNED),
 
-    LA("Lao People's Democratic Republic", "LAO", 418, Assignment.OFFICIALLY_ASSIGNED),
+    LA("Lao People's Democratic Republic", "LAO", 418,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     LB("Lebanon", "LBN", 422, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -392,7 +366,8 @@ public enum CountryCodeToISO
 
     MH("Marshall Islands", "MHL", 584, Assignment.OFFICIALLY_ASSIGNED),
 
-    MK("Macedonia, the former Yugoslav Republic of", "MKD", 807, Assignment.OFFICIALLY_ASSIGNED),
+    MK("Macedonia, the former Yugoslav Republic of", "MKD", 807,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     ML("Mali", "MLI", 466, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -432,7 +407,7 @@ public enum CountryCodeToISO
 
     NF("Norfolk Island", "NFK", 574, Assignment.OFFICIALLY_ASSIGNED),
 
-    NG("Nigeria","NGA", 566, Assignment.OFFICIALLY_ASSIGNED),
+    NG("Nigeria", "NGA", 566, Assignment.OFFICIALLY_ASSIGNED),
 
     NI("Nicaragua", "NIC", 558, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -506,7 +481,8 @@ public enum CountryCodeToISO
 
     SG("Singapore", "SGP", 702, Assignment.OFFICIALLY_ASSIGNED),
 
-    SH("Saint Helena, Ascension and Tristan da Cunha", "SHN", 654, Assignment.OFFICIALLY_ASSIGNED),
+    SH("Saint Helena, Ascension and Tristan da Cunha", "SHN", 654,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     SI("Slovenia", "SVN", 705, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -540,7 +516,8 @@ public enum CountryCodeToISO
 
     TD("Chad", "TCD", 148, Assignment.OFFICIALLY_ASSIGNED),
 
-    TF("French Southern Territories", "ATF", 260, Assignment.OFFICIALLY_ASSIGNED),
+    TF("French Southern Territories", "ATF", 260,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     TG("Togo", "TGO", 768, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -566,28 +543,26 @@ public enum CountryCodeToISO
 
     TV("Tuvalu", "TUV", 798, Assignment.OFFICIALLY_ASSIGNED),
 
-    TW("Taiwan, Province of China", "TWN", 158, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    TW("Taiwan, Province of China", "TWN", 158, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.TAIWAN;
         }
     },
 
-    TZ("Tanzania, United Republic of", "TZA", 834, Assignment.OFFICIALLY_ASSIGNED),
+    TZ("Tanzania, United Republic of", "TZA", 834,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     UA("Ukraine", "UKR", 804, Assignment.OFFICIALLY_ASSIGNED),
 
     UG("Uganda", "UGA", 800, Assignment.OFFICIALLY_ASSIGNED),
 
-    UM("United States Minor Outlying Islands", "UMI", 581, Assignment.OFFICIALLY_ASSIGNED),
+    UM("United States Minor Outlying Islands", "UMI", 581,
+            Assignment.OFFICIALLY_ASSIGNED),
 
-    US("United States", "USA", 840, Assignment.OFFICIALLY_ASSIGNED)
-    {
+    US("United States", "USA", 840, Assignment.OFFICIALLY_ASSIGNED) {
         @Override
-        public Locale toLocale()
-        {
+        public Locale toLocale() {
             return Locale.US;
         }
     },
@@ -596,11 +571,14 @@ public enum CountryCodeToISO
 
     UZ("Uzbekistan", "UZB", 860, Assignment.OFFICIALLY_ASSIGNED),
 
-    VA("Holy See (Vatican City State)", "VAT", 336, Assignment.OFFICIALLY_ASSIGNED),
+    VA("Holy See (Vatican City State)", "VAT", 336,
+            Assignment.OFFICIALLY_ASSIGNED),
 
-    VC("Saint Vincent and the Grenadines", "VCT", 670, Assignment.OFFICIALLY_ASSIGNED),
+    VC("Saint Vincent and the Grenadines", "VCT", 670,
+            Assignment.OFFICIALLY_ASSIGNED),
 
-    VE("Venezuela, Bolivarian Republic of", "VEN", 862, Assignment.OFFICIALLY_ASSIGNED),
+    VE("Venezuela, Bolivarian Republic of", "VEN", 862,
+            Assignment.OFFICIALLY_ASSIGNED),
 
     VG("Virgin Islands, British", "VGB", 92, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -618,268 +596,216 @@ public enum CountryCodeToISO
 
     YT("Mayotte", "MYT", 175, Assignment.OFFICIALLY_ASSIGNED),
 
-    //YU("Yugoslavia", "YUCS", 890, Assignment.TRANSITIONALLY_RESERVED),
+    // YU("Yugoslavia", "YUCS", 890, Assignment.TRANSITIONALLY_RESERVED),
 
     ZA("South Africa", "ZAF", 710, Assignment.OFFICIALLY_ASSIGNED),
 
     ZM("Zambia", "ZMB", 894, Assignment.OFFICIALLY_ASSIGNED),
 
-    //ZR("Zaire", "ZRCD", 0, Assignment.TRANSITIONALLY_RESERVED),
+    // ZR("Zaire", "ZRCD", 0, Assignment.TRANSITIONALLY_RESERVED),
 
-    ZW("Zimbabwe", "ZWE", 716, Assignment.OFFICIALLY_ASSIGNED),
-    ;
+    ZW("Zimbabwe", "ZWE", 716, Assignment.OFFICIALLY_ASSIGNED), ;
 
-    public enum Assignment
-    {
+    public enum Assignment {
         /**
-         * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
+         * <a href=
+         * "http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
          * >Officially assigned</a>.
-         *
+         * 
          * Assigned to a country, territory, or area of geographical interest.
          */
         OFFICIALLY_ASSIGNED,
 
         /**
-         * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#User-assigned_code_elements"
+         * <a href=
+         * "http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#User-assigned_code_elements"
          * >User assigned</a>.
-         *
+         * 
          * Free for assignment at the disposal of users.
          */
         USER_ASSIGNED,
 
         /**
-         * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Exceptional_reservations"
+         * <a href=
+         * "http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Exceptional_reservations"
          * >Exceptionally reserved</a>.
-         *
+         * 
          * Reserved on request for restricted use.
          */
         EXCEPTIONALLY_RESERVED,
 
         /**
-         * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Transitional_reservations"
+         * <a href=
+         * "http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Transitional_reservations"
          * >Transitionally reserved</a>.
-         *
+         * 
          * Deleted from ISO 3166-1 but reserved transitionally.
          */
         TRANSITIONALLY_RESERVED,
 
         /**
-         * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Indeterminate_reservations"
+         * <a href=
+         * "http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Indeterminate_reservations"
          * >Indeterminately reserved</a>.
-         *
+         * 
          * Used in coding systems associated with ISO 3166-1.
          */
         INDETERMINATELY_RESERVED,
 
         /**
-         * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Codes_currently_agreed_not_to_use"
+         * <a href=
+         * "http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Codes_currently_agreed_not_to_use"
          * >Not used</a>.
-         *
+         * 
          * Not used in ISO 3166-1 in deference to international property
          * organization names.
          */
         NOT_USED
     }
 
-
     private static final Map<String, CountryCodeToISO> alpha3Map = new HashMap<String, CountryCodeToISO>();
     private static final Map<Integer, CountryCodeToISO> numericMap = new HashMap<Integer, CountryCodeToISO>();
 
-
-    static
-    {
-        for (CountryCodeToISO cc : values())
-        {
-            if (cc.getAlpha3() != null)
-            {
+    static {
+        for (CountryCodeToISO cc : values()) {
+            if (cc.getAlpha3() != null) {
                 alpha3Map.put(cc.getAlpha3(), cc);
             }
 
-            if (cc.getNumeric() != -1)
-            {
+            if (cc.getNumeric() != -1) {
                 numericMap.put(cc.getNumeric(), cc);
             }
         }
     }
-
 
     private final String name;
     private final String alpha3;
     private final int numeric;
     private final Assignment assignment;
 
-
-    private CountryCodeToISO(String name, String alpha3, int numeric, Assignment assignment)
-    {
+    private CountryCodeToISO(String name, String alpha3, int numeric,
+            Assignment assignment) {
         this.name = name;
         this.alpha3 = alpha3;
         this.numeric = numeric;
         this.assignment = assignment;
     }
 
-
     /**
      * Get the country name.
-     *
-     * @return
-     *         The country name.
+     * 
+     * @return The country name.
      */
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getAlpha2()
-    {
+    public String getAlpha2() {
         return name();
     }
 
-    public String getAlpha3()
-    {
+    public String getAlpha3() {
         return alpha3;
     }
 
-    public int getNumeric()
-    {
+    public int getNumeric() {
         return numeric;
     }
 
-    public Assignment getAssignment()
-    {
+    public Assignment getAssignment() {
         return assignment;
     }
 
-    public Locale toLocale()
-    {
+    public Locale toLocale() {
         return new Locale("", name());
     }
 
-
-    public Currency getCurrency()
-    {
-        try
-        {
+    public Currency getCurrency() {
+        try {
             return Currency.getInstance(toLocale());
-        }
-        catch (IllegalArgumentException e)
-        {
-            // Currency.getInstance(Locale) throws IllegalArgumentException
-            // when the given ISO 3166 code is not supported.
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-    public static CountryCodeToISO getByCode(String code)
-    {
+    public static CountryCodeToISO getByCode(String code) {
         return getByCode(code, false);
     }
 
-    public static CountryCodeToISO getByCode(String code, boolean caseSensitive)
-    {
-        if (code == null)
-        {
+    public static CountryCodeToISO getByCode(String code, boolean caseSensitive) {
+        if (code == null) {
             return null;
         }
 
-        switch (code.length())
-        {
-            case 2:
-                code = canonicalize(code, caseSensitive);
-                return getByAlpha2Code(code);
+        switch (code.length()) {
+        case 2:
+            code = canonicalize(code, caseSensitive);
+            return getByAlpha2Code(code);
 
-            case 3:
-                code = canonicalize(code, caseSensitive);
-                return getByAlpha3Code(code);
+        case 3:
+            code = canonicalize(code, caseSensitive);
+            return getByAlpha3Code(code);
 
-            default:
-                return null;
+        default:
+            return null;
         }
     }
 
-
-    public static CountryCodeToISO getByLocale(Locale locale)
-    {
-        if (locale == null)
-        {
+    public static CountryCodeToISO getByLocale(Locale locale) {
+        if (locale == null) {
             return null;
         }
 
-        // Locale.getCountry() returns either an empty string or
-        // an uppercase ISO 3166 2-letter code.
         return getByCode(locale.getCountry(), true);
     }
 
-
-    static String canonicalize(String code, boolean caseSensitive)
-    {
-        if (code == null || code.length() == 0)
-        {
+    static String canonicalize(String code, boolean caseSensitive) {
+        if (code == null || code.length() == 0) {
             return null;
         }
 
-        if (caseSensitive)
-        {
+        if (caseSensitive) {
             return code;
-        }
-        else
-        {
+        } else {
             return code.toUpperCase();
         }
     }
 
-
-    private static CountryCodeToISO getByAlpha2Code(String code)
-    {
-        try
-        {
+    private static CountryCodeToISO getByAlpha2Code(String code) {
+        try {
             return Enum.valueOf(CountryCodeToISO.class, code);
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-
-    private static CountryCodeToISO getByAlpha3Code(String code)
-    {
+    private static CountryCodeToISO getByAlpha3Code(String code) {
         return alpha3Map.get(code);
     }
 
-    public static CountryCodeToISO getByCode(int code)
-    {
+    public static CountryCodeToISO getByCode(int code) {
         return numericMap.get(code);
     }
 
-    public static List<CountryCodeToISO> findByName(String regex)
-    {
-        if (regex == null)
-        {
+    public static List<CountryCodeToISO> findByName(String regex) {
+        if (regex == null) {
             throw new IllegalArgumentException("regex is null.");
         }
 
-        // Compile the regular expression. This may throw
-        // java.util.regex.PatternSyntaxException.
         Pattern pattern = Pattern.compile(regex);
 
         return findByName(pattern);
     }
 
-
-        public static List<CountryCodeToISO> findByName(Pattern pattern)
-    {
-        if (pattern == null)
-        {
+    public static List<CountryCodeToISO> findByName(Pattern pattern) {
+        if (pattern == null) {
             throw new IllegalArgumentException("pattern is null.");
         }
 
         List<CountryCodeToISO> list = new ArrayList<CountryCodeToISO>();
 
-        for (CountryCodeToISO entry : values())
-        {
-            // If the name matches the given pattern.
-            if (pattern.matcher(entry.getName()).matches())
-            {
+        for (CountryCodeToISO entry : values()) {
+            if (pattern.matcher(entry.getName()).matches()) {
                 list.add(entry);
             }
         }
