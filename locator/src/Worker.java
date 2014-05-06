@@ -4,6 +4,7 @@ import java.io.FileReader;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.MessageProperties;
 import com.rabbitmq.client.QueueingConsumer;
 
 import java.io.FileNotFoundException;
@@ -25,16 +26,22 @@ public class Worker {
 	  
 	ConnectionFactory factory = new ConnectionFactory();
     factory.setHost("localhost");
-    Connection connection = factory.newConnection();
-    Channel channel = connection.createChannel();
+   
+    Connection connectionIn = factory.newConnection();
+    Channel channelIn = connectionIn.createChannel();
     
-    channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
-    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+    channelIn.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
+    //System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
     
-    channel.basicQos(1);
+    Connection connectionOut = factory.newConnection();
+    Channel channelOut = connectionOut.createChannel();
     
-    QueueingConsumer consumer = new QueueingConsumer(channel);
-    channel.basicConsume(TASK_QUEUE_NAME, false, consumer);
+    channelOut.queueDeclare("eventsWithISO", true, false, false, null);
+    
+    channelIn.basicQos(1);
+    
+    QueueingConsumer consumer = new QueueingConsumer(channelIn);
+    channelIn.basicConsume(TASK_QUEUE_NAME, false, consumer);
     
     while (true) {
       QueueingConsumer.Delivery delivery = consumer.nextDelivery();
@@ -47,23 +54,29 @@ public class Worker {
       String address = parseJson(jsonObject);
       
       if(address == null || address.equals("")){
-    	  channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+    	  channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
     	  continue;
       }
       int isoCode = nameToIso.start(address); 
       
       //-1 is returned we should skip this message because a isonumber cannot be found.
       if (isoCode == -1){
-    	  channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+    	  channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
     	  continue;
       }
       
-      //add the isocode to the json object
-      //DO SOMETHING WITH THIS OBJECT!!!!
+      //Sent Json object
       JSONObject jsonObjectWithISO = addISOToJson(jsonObject,isoCode);
-      System.out.println(jsonObjectWithISO);
+      String messageOut = jsonObjectWithISO.toString();
       
-      channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+      channelOut.basicPublish( "", "eventsWithISO", 
+              MessageProperties.PERSISTENT_TEXT_PLAIN,
+              messageOut.getBytes());
+      
+      System.out.println(" [x] Sent '" + messageOut + "'");
+      System.out.println("message sent");
+      
+      channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
     }         
   }
   
@@ -103,4 +116,4 @@ public class Worker {
 	}
 	  return JsonMessage;
   }
-}
+ }
