@@ -1,7 +1,11 @@
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import redis.clients.jedis.Jedis;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -22,7 +26,7 @@ public class Worker implements Runnable {
                 JSONObject actor = (JSONObject) event.get("actor");
                 if (actor.has("location") && !actor.isNull("location")) {
                     Object locationObject = actor.get("location");
-                    return JSONObject.valueToString(locationObject);
+                    return locationObject.toString();
                 }
             }
         } catch (JSONException e) {
@@ -41,6 +45,7 @@ public class Worker implements Runnable {
     private Channel channelIn;
     private Channel channelOut;
     private GoogleGeocodingService geocodingService;
+    private Jedis redis;
 
     public Worker(String amqpHost) {
         geocodingService = new GoogleGeocodingService();
@@ -57,6 +62,8 @@ public class Worker implements Runnable {
         Connection connectionOut = amqpConnectionFactory.newConnection();
         channelOut = connectionOut.createChannel();
         channelOut.queueDeclare(OUT_QUEUE_NAME, true, false, false, null);
+
+        redis = new Jedis("localhost");
     }
 
     private void processEvent(JSONObject event) throws IOException {
@@ -65,8 +72,7 @@ public class Worker implements Runnable {
             return;
         }
 
-        String countryAlpha2 = geocodingService
-                .locationToCountryAlpha2(location);
+        String countryAlpha2 = locationToAlpha2(location);
         if (countryAlpha2 == GoogleGeocodingService.NO_COUNTRY) {
             return;
         }
@@ -90,6 +96,35 @@ public class Worker implements Runnable {
                 System.out.println("[*] Sent: actor=" + event.get("actor"));
             } catch (JSONException e) {
             }
+        }
+    }
+
+    private String locationToAlpha2(String location) throws IOException {
+        String key = locationToRedisKey(location);
+        String alpha2 = redis.get(key);
+
+        if (alpha2 != null) {
+            System.out.println("[*] Got location from Redis");
+        } else {
+            alpha2 = geocodingService.locationToCountryAlpha2(location);
+            System.out.println("[*] Got location from Google");
+
+            if (alpha2 != null && !location.equals("")) {
+                redis.set(key, alpha2);
+                redis.expire(key, 2592000); // 30d
+            }
+
+        }
+        return alpha2;
+    }
+
+    public String locationToRedisKey(String location) {
+        try {
+            return "google:geocode:location:"
+                    + URLEncoder.encode(location.toLowerCase(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
