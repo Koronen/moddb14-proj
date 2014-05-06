@@ -16,7 +16,7 @@ import org.json.JSONObject;
   
 public class Worker {
 
-  private static final String TASK_QUEUE_NAME = "raw-events";
+  private static final String TASK_QUEUE_NAME = "task_queue";
 
   public static void main(String[] argv) throws Exception {
 
@@ -76,7 +76,12 @@ public class Worker {
 			JSONObject actor = (JSONObject)JsonMessage.get("actor");
 			
 				if(actor.has("location")) {
-					location = (String) actor.get("location");
+					
+					Object locationObject = actor.get("location");
+					if(locationObject!=null){
+						location = (String) locationObject;
+					}
+
 				}
 			
 			}	
