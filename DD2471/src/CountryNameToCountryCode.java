@@ -100,7 +100,7 @@
      map.put("S. Georgia & S. Sandwich Isls.", "GS");
      map.put("Guatemala", "GT");
      map.put("Guam (USA)", "GU");
-     map.put("Guinea Bissau", "GW");
+     map.put("Guinea-Bissau", "GW");
      map.put("Guyana", "GY");
      map.put("Hong Kong", "HK");
      map.put("Heard And McDonald Islands", "HM");

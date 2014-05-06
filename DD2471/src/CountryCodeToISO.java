@@ -618,13 +618,13 @@ public enum CountryCodeToISO
 
     YT("Mayotte", "MYT", 175, Assignment.OFFICIALLY_ASSIGNED),
 
-    YU("Yugoslavia", "YUCS", 890, Assignment.TRANSITIONALLY_RESERVED),
+    //YU("Yugoslavia", "YUCS", 890, Assignment.TRANSITIONALLY_RESERVED),
 
     ZA("South Africa", "ZAF", 710, Assignment.OFFICIALLY_ASSIGNED),
 
     ZM("Zambia", "ZMB", 894, Assignment.OFFICIALLY_ASSIGNED),
 
-    ZR("Zaire", "ZRCD", 0, Assignment.TRANSITIONALLY_RESERVED),
+    //ZR("Zaire", "ZRCD", 0, Assignment.TRANSITIONALLY_RESERVED),
 
     ZW("Zimbabwe", "ZWE", 716, Assignment.OFFICIALLY_ASSIGNED),
     ;

@@ -28,7 +28,7 @@ public class countryNameToISO {
 
   public static final void main (String[] argv) throws IOException, XPathExpressionException, ParserConfigurationException, SAXException {
 	  countryNameToISO cnti = new countryNameToISO();
-	  String Address = "New York";
+	  String Address = "Maluku";
 	  int iso = cnti.start(Address);
   }
   public int start(String address) throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
@@ -69,6 +69,7 @@ public class countryNameToISO {
 		  //if google does not find any location, return -1.
 		  if(resultNodeList.item(0) ==(null)){
 			  ISOcode = -1;
+			  System.out.println("google cannot find location");
 			  return ISOcode;
 		  }
 		  String n = resultNodeList.item(0).getTextContent();
@@ -76,7 +77,7 @@ public class countryNameToISO {
 			  
 		  String countryPlusSpace = array[array.length-1];
 		  String country = countryPlusSpace.trim();
-		  //System.out.println("countryName: "+country);
+		  System.out.println("countryName: "+country);
 			   
 		
 		  //fetching the country code
