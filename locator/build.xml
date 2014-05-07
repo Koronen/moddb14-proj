@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <project basedir="." default="build" name="moddb14-locator">
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="moddb14-locator.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/org.json-20120521.jar"/>
+        <pathelement location="lib/rabbitmq-client.jar"/>
+        <pathelement location="lib/jedis-2.4.2.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <mkdir dir="lib"/>
+        <get src="http://www.rabbitmq.com/releases/rabbitmq-java-client/v3.3.1/rabbitmq-java-client-bin-3.3.1.zip" dest="lib/rabbitmq-java-client-bin-3.3.1.zip" skipexisting="true"/>
+        <unzip src="lib/rabbitmq-java-client-bin-3.3.1.zip" dest="lib">
+            <patternset>
+                <include name="rabbitmq-java-client-bin-3.3.1/rabbitmq-client.jar"/>
+            </patternset>
+            <mapper type="flatten"/>
+        </unzip>
+        <get src="https://org-json-java.googlecode.com/files/org.json-20120521.jar" dest="lib/org.json-20120521.jar" skipexisting="true"/>
+        <get src="http://search.maven.org/remotecontent?filepath=redis/clients/jedis/2.4.2/jedis-2.4.2.jar" dest="lib/jedis-2.4.2.jar" skipexisting="true"/>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+        <delete>
+            <fileset dir="." includes="*.class" />
+        </delete>
+    </target>
+    <target depends="init" name="build">
+        <javac debug="true" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="moddb14-locator.classpath"/>
+        </javac>
+    </target>
+    <target depends="build" name="run">
+        <java classname="Worker">
+            <classpath refid="moddb14-locator.classpath"/>
+        </java>
+    </target>
+</project>
