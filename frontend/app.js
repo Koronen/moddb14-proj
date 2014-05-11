@@ -1,3 +1,11 @@
+var dotenv = require('dotenv');
+dotenv.load();
+
+if(!process.env.MONGODB_URL || process.env.MONGODB_URL.length < 1) {
+  console.error("Missing required environment variable MONGODB_URL!");
+  process.exit(1);
+}
+
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -5,9 +13,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/moddb');
+var mongoose = require("mongoose");
+mongoose.connect(process.env.MONGODB_URL);
+var db = mongoose.connection;
 
 var routes = require('./routes/index');
 
@@ -19,6 +27,17 @@ var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
 var io = require('socket.io').listen(server);
+
+// Database stuffs
+var Event;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function(){
+  var eventSchema = mongoose.Schema({
+    actor: Number,
+    created_at: Date
+  })
+  Event = mongoose.model("Event", eventSchema);
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -74,23 +93,43 @@ io.sockets.on("connection", function(socket) {
     console.log(data);
   });
   socket.on("fetch data", function(data) {
-    var collection = db.get('ccoll');
-    collection.find({}, {}, function(e, docs) {
-      if(e) {
-        console.log(e);
-      }
-      var maxvalue = 0;
-      docs.forEach(function(entry) {
-        maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
-      });
+    var duration = 60;
+    var endtime = new Date();
+    var starttime = function(date, minutes) {
+      return new Date(date.getTime() - minutes*60000);
+    }(endtime, duration);
+    console.log("fetching data");
+    Event.aggregate(
+      {
+        $match: {
+          created_at: {
+            $gt: new Date(starttime.toISOString()),
+            $lt: new Date(endtime.toISOString())
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$actor", value: { $sum: 1 }
+        }
+      },
+      function(err, docs){
+        if(err) {
+          return console.log(err);
+        }
 
-      var datamap = {};
-      docs.forEach(function(entry) {
-        datamap[entry.cid] = entry.value/maxvalue;
-      });
+        console.log(docs);
+        var maxvalue = 0;
+        docs.forEach(function(entry) {
+          maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
+        });
 
-      socket.emit("db update", datamap)
-    });
+        var datamap = {};
+        docs.forEach(function(entry) {
+          datamap[entry._id] = entry.value/maxvalue;
+        });
+        socket.emit("db update", datamap);
+      })
   });
 });
 

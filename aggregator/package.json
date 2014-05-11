@@ -1,0 +1,32 @@
+{
+  "name": "moddb14-proj-aggregator",
+  "version": "0.0.1",
+  "description": "Aggregator",
+  "keywords": ["github"],
+  "scripts": {
+    "start": "node node_modules/coffee-script/bin/coffee aggregator.coffee",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Koronen/moddb14-proj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Koronen/moddb14-proj/issues"
+  },
+  "author": "Victor Koronen <koronen@kth.se>",
+  "contributors": [
+    { "name": "Mitra Khorsand <mitrak@kth.se>" },
+    { "name": "Simon Johansson <simj@kth.se>" }
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": "~0.10.15"
+  },
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "dotenv": "~0.2.7",
+    "amqp": "~0.2.0",
+    "mongodb": "~1.4.3"
+  }
+}
