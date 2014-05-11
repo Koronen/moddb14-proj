@@ -138,8 +138,13 @@ public class Worker implements Runnable {
                 QueueingConsumer.Delivery delivery;
                 try {
                     delivery = consumer.nextDelivery();
-                } catch (ShutdownSignalException | ConsumerCancelledException
-                        | InterruptedException e) {
+                } catch (ShutdownSignalException e) {
+                    e.printStackTrace();
+                    break;
+                } catch (ConsumerCancelledException e) {
+                    e.printStackTrace();
+                    break;
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                     break;
                 }

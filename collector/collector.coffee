@@ -114,7 +114,7 @@ connection.on 'ready', ->
 
           if location and location isnt "" # Don't cache empty locations
             redisClient.set key, location, (err, reply) ->
-              redisClient.expire key, 86400
+              redisClient.expire key, 604800 # 1 week
 
   pollEvents()
 

@@ -1,6 +1,6 @@
-# moddb14-proj aggregator
+# moddb14-proj frontend
 
-Listens for data on an AMQP queue and dumps the data into a MongoDB collection.
+Runs a web server, allowing users to view the aggregated data on a web page.
 
 ## How to install
 

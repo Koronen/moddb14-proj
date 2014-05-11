@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <project basedir="." default="build" name="moddb14-locator">
-    <property name="target" value="1.7"/>
-    <property name="source" value="1.7"/>
     <path id="moddb14-locator.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/org.json-20120521.jar"/>
@@ -28,7 +26,7 @@
         </delete>
     </target>
     <target depends="init" name="build">
-        <javac debug="true" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+        <javac debug="true" destdir="bin" includeantruntime="false">
             <src path="src"/>
             <classpath refid="moddb14-locator.classpath"/>
         </javac>
