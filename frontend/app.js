@@ -1,3 +1,11 @@
+var dotenv = require('dotenv');
+dotenv.load();
+
+if(!process.env.MONGODB_URL || process.env.MONGODB_URL.length < 1) {
+  console.error("Missing required environment variable MONGODB_URL!");
+  process.exit(1);
+}
+
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -6,7 +14,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/moddb");
+mongoose.connect(process.env.MONGODB_URL);
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
