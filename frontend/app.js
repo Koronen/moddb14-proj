@@ -6,8 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/moddb');
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost:27017/moddb");
+var db = mongoose.connection;
+//var monk = require('monk');
+//var db = monk('localhost:27017/moddb');
 
 var routes = require('./routes/index');
 
@@ -19,6 +22,23 @@ var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
 var io = require('socket.io').listen(server);
+
+// Database stuffs
+var Event;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function(){
+	var eventSchema = mongoose.Schema({
+		actor: Number,
+		created_at: Date
+	})
+	Event = mongoose.model("Event", eventSchema);
+	/*
+	var simple = new Event({actor: 9999, date: new Date()});
+	simple.save(function(err,simple){
+		if(err){return console.error(err);}
+	});
+	*/
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -73,25 +93,40 @@ io.sockets.on("connection", function(socket) {
   socket.on("dump", function(data) {
     console.log(data);
   });
-  socket.on("fetch data", function(data) {
-    var collection = db.get('ccoll');
-    collection.find({}, {}, function(e, docs) {
-      if(e) {
-        console.log(e);
-      }
-      var maxvalue = 0;
-      docs.forEach(function(entry) {
-        maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
-      });
+	socket.on("fetch data", function(data) {
+		//var collection = db.get("ccoll");
+		var duration = 60;
+		var endtime = new Date();
+		var starttime = function(date, minutes){
+			return new Date(date.getTime() - minutes*60000);
+		}(endtime, duration);
+		console.log("fetching data");
+		Event.aggregate({
+			$match:{
+				created_at: {
+					$gt: new Date(starttime.toISOString()), // toISOString();
+					$lt: new Date(endtime.toISOString())
+				}
+			}
+			},{
+			$group:{
+				_id:"$actor", value:{$sum:1}}},
+				function(err, docs){
+					if(err) return console.log(err)
+					console.log(docs)	
+					var maxvalue = 0;
+					docs.forEach(function(entry) {
+						maxvalue = (maxvalue >= entry.value ? maxvalue : entry.value);
+					});
 
-      var datamap = {};
-      docs.forEach(function(entry) {
-        datamap[entry.cid] = entry.value/maxvalue;
-      });
+					var datamap = {};
+					docs.forEach(function(entry) {
+						datamap[entry._id] = entry.value/maxvalue;
+					});
+					socket.emit("db update", datamap);
+				})
 
-      socket.emit("db update", datamap)
-    });
-  });
+	});
 });
 
 module.exports = app;

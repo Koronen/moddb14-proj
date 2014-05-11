@@ -84,11 +84,14 @@ function updatemap(dbdata){
 			// d is data from data()
 			// i is index
 			// Can use d.id to identifiy contries
+			if(d.id === -99){
+				return "#00ff00";
+			}
 			if(d.id in dbdata){
-				//return RGB(dbdata[d.id]);
-				return RGB(Math.random());
+				return RGB(dbdata[d.id]);
+				//return RGB(Math.random());
 			} else {
-				return "#000000";
+				return "#00ff00";
 			}
 		});
 }
