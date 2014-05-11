@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+if [ ! -f .env ]; then
+    echo "[+] No environment config found, copying template..."
+    cp .env.sample .env
+fi
+
+echo "[+] Running 'npm install'..."
+npm install
