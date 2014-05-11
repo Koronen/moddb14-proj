@@ -27,8 +27,7 @@ MongoClient.connect process.env.MONGODB_URL, (err, db) ->
         event = JSON.parse msg.data.toString('utf-8')
 
         minified_event =
-          actor:
-            country_iso: event.actor.country_iso
+          actor: event.actor.country_iso
           created_at: new Date(event.created_at)
 
         collection.insert minified_event, (err, docs) ->
