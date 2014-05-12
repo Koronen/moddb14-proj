@@ -39,8 +39,21 @@
     </style>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p><%= subtitle %></p>
+		<div align="top">
+			<h1><%= title %></h1>
+			<p><%= subtitle %></p>
+			<p><%= description %></p>
+			<select id="timeSelect" onchange="if (this.selectedIndex) getNewData();">
+				<option selected value='{"hours": 0, "minutes": 5}'>5 minutes</option>
+				<option value='{"hours": 0, "minutes": 15}'>15 minutes</option>
+				<option value='{"hours": 0, "minutes": 30}'>30 minutes</option>
+				<option value='{"hours": 1, "minutes": 0}'>1 hour</option>
+				<option value='{"hours": 2, "minutes": 0}'>2 hour</option>
+				<option value='{"hours": 6, "minutes": 0}'>6 hour</option>
+				<option value='{"hours": 12, "minutes": 0}'>12 hour</option>
+				<option value='{"hours": 24, "minutes": 0}'>24 hour</option>
+			</select>
+		</div>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>

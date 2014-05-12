@@ -62,8 +62,14 @@ socket.on('news', function (data) {
 });
 
 
+function getNewData(){
+	var selection = document.getElementById("timeSelect").value;
+	var jsonObj = JSON.parse(selection);
+	socket.emit("fetch data", jsonObj)
+}
+
 setInterval(function(){
-	socket.emit("fetch data", {})
+	getNewData();
 }, 5000);
 
 
@@ -154,5 +160,5 @@ d3.json("/javascripts/world-50m.json", function(error, world) {
 
 	d3.select(self.frameElement).style("height", height + "px");
 
-	socket.emit("fetch data", {})
+	socket.emit("fetch data", {hours:0, minutes:15})
 });
