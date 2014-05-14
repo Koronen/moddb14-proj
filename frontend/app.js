@@ -93,11 +93,19 @@ io.sockets.on("connection", function(socket) {
     console.log(data);
   });
   socket.on("fetch data", function(data) {
-    var duration = 60;
+    //var duration = 30; // This can't exceed 59
+		var endtime = new Date();
+		var starttime = new Date();
+		var hours = data.hours;
+		var minutes = data.minutes;
+		starttime.setHours(endtime.getHours() - hours)
+		starttime.setMinutes(endtime.getMinutes() - minutes)
+		/*
     var endtime = new Date();
     var starttime = function(date, minutes) {
       return new Date(date.getTime() - minutes*60000);
     }(endtime, duration);
+		*/
     console.log("fetching data");
     Event.aggregate(
       {
